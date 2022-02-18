@@ -6,6 +6,8 @@ package com.thealgorithms.divideandconquer;
  */
 public final class ClosestPair {
 
+    
+
     /**
      * Number of points
      */
@@ -13,7 +15,7 @@ public final class ClosestPair {
     /**
      * Input data, maximum 10000.
      */
-    private Location[] array;
+    Location[] array;
     /**
      * Minimum point coordinate.
      */
@@ -178,7 +180,12 @@ public final class ClosestPair {
         // divide-right array
         Location[] rightArray = new Location[indexNum - divideX];
         if (indexNum <= 3) { // If the number of coordinates is 3 or less
+            /* branch 1*/
+            branchCount[1]++;
             return bruteForce(divideArray);
+        } else {
+            /* branch 2 */
+            branchCount[2]++;
         }
         // divide-left array
         System.arraycopy(divideArray, 0, leftArray, 0, divideX);
@@ -197,12 +204,23 @@ public final class ClosestPair {
         // Create window.  Set the size for creating a window
         // and creating a new array for the coordinates in the window
         for (int i = 0; i < indexNum; i++) {
+            /* branch 3 */
+            branchCount[3]++;
             double xGap = Math.abs(divideArray[divideX].x - divideArray[i].x);
             if (xGap < minValue) {
+                /* branch 4 */
+                branchCount[4]++;
                 ClosestPair.setSecondCount(secondCount + 1); // size of the array
             } else {
+               /* branch 5 */
+                branchCount[5]++;
                 if (divideArray[i].x > divideArray[divideX].x) {
+                    /* branch 6 */
+                    branchCount[6]++;
                     break;
+                } else {
+                    /* branch 7 */
+                    branchCount[7]++;
                 }
             }
         }
@@ -210,13 +228,24 @@ public final class ClosestPair {
         Location[] firstWindow = new Location[secondCount];
         int k = 0;
         for (int i = 0; i < indexNum; i++) {
+            /* branch 8 */
+            branchCount[8]++;
             double xGap = Math.abs(divideArray[divideX].x - divideArray[i].x);
             if (xGap < minValue) { // if it's inside a window
+                /* branch 9 */
+                branchCount[9]++;
                 firstWindow[k] = divideArray[i]; // put in an array
                 k++;
             } else {
+                /* branch 10 */
+                branchCount[10]++;
                 if (divideArray[i].x > divideArray[divideX].x) {
+                    /* branch 11 */
+                    branchCount[11]++;
                     break;
+                } else {
+                    /* branch 12 */
+                    branchCount[12]++;
                 }
             }
         }
@@ -225,23 +254,41 @@ public final class ClosestPair {
         double length;
         // size comparison within window
         for (int i = 0; i < secondCount - 1; i++) {
+            /* branch 13 */
+            branchCount[13]++;
             for (int j = (i + 1); j < secondCount; j++) {
+                /* branch 14 */
+                branchCount[14]++;
                 double xGap = Math.abs(firstWindow[i].x - firstWindow[j].x);
                 double yGap = Math.abs(firstWindow[i].y - firstWindow[j].y);
                 if (yGap < minValue) {
+                    /* branch 15 */
+                    branchCount[15]++;
                     length = Math.sqrt(Math.pow(xGap, 2) + Math.pow(yGap, 2));
                     // If measured distance is less than current min distance
                     if (length < minValue) {
+                        /* branch 16 */
+                        branchCount[16]++;
                         // Change minimum distance to current distance
                         minValue = length;
                         // Conditional for registering final coordinate
                         if (length < minNum) {
+                            /* branch 17 */
+                            branchCount[17]++;
                             ClosestPair.setMinNum(length);
                             point1 = firstWindow[i];
                             point2 = firstWindow[j];
+                        } else {
+                            /* branch 18 */
+                            branchCount[18]++;
                         }
+                    } else {
+                        /* branch 19 */
+                        branchCount[19]++;
                     }
                 } else {
+                    /* branch 20 */
+                    branchCount[20]++;
                     break;
                 }
             }
@@ -249,6 +296,8 @@ public final class ClosestPair {
         ClosestPair.setSecondCount(0);
         return minValue;
     }
+    static int[] branchCount = new int[21];
+    // reported branch coverage from running main below: (20-1)/20 = 95%
 
     /**
      * bruteForce function: When the number of coordinates is less than 3.
@@ -345,5 +394,11 @@ public final class ClosestPair {
         System.out.println("(" + cp.point1.x + ", " + cp.point1.y + ")");
         System.out.println("(" + cp.point2.x + ", " + cp.point2.y + ")");
         System.out.println("Minimum Distance : " + result);
+
+        for (int i = 1; i < ClosestPair.branchCount.length; i++) {
+            if (ClosestPair.branchCount[i] == 0) {
+                System.out.println("Branch " + i + " was never taken");
+            }
+        }
     }
 }
