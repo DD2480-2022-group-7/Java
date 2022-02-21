@@ -203,7 +203,8 @@ public class RedBlackBST {
         return subTreeRoot;
     }
 
-    boolean delete(Node z) {
+    boolean delete(int key) {
+        Node z = new Node(key);
         if ((z = findNode(z, root)) == null) {
             return false;
         }
@@ -349,7 +350,7 @@ public class RedBlackBST {
         item = scan.nextInt();
         node = new Node(item);
         System.out.print("Deleting item " + item);
-        if (delete(node)) {
+        if (delete(item)) {
             System.out.print(": deleted!");
         } else {
             System.out.print(": does not exist!");
