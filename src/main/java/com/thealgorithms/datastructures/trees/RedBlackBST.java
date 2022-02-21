@@ -21,7 +21,7 @@ public class RedBlackBST {
     }
 
     private final Node nil = new Node(-1);
-    private Node root = nil;
+    public Node root = nil;
 
     public void printTree(Node node) {
         if (node == nil) {
@@ -61,7 +61,8 @@ public class RedBlackBST {
         return null;
     }
 
-    private void insert(Node node) {
+    public void insert(int key) {
+        Node node = new Node(key);
         Node temp = root;
         if (root == nil) {
             root = node;
@@ -238,61 +239,86 @@ public class RedBlackBST {
         return true;
     }
 
+    public static int[] branchCoverage = new int[19];
     void deleteFixup(Node x) {
         while (x != root && x.color == B) {
+            branchCoverage[1]++;
             if (x == x.p.left) {
+                branchCoverage[2]++;
                 Node w = x.p.right;
                 if (w.color == R) {
+                    branchCoverage[3]++;
                     w.color = B;
                     x.p.color = R;
                     rotateLeft(x.p);
                     w = x.p.right;
+                } else {
+                    branchCoverage[4]++;
                 }
                 if (w.left.color == B && w.right.color == B) {
+                    branchCoverage[5]++;
                     w.color = R;
                     x = x.p;
                     continue;
                 } else if (w.right.color == B) {
+                    branchCoverage[6]++;
                     w.left.color = B;
                     w.color = R;
                     rotateRight(w);
                     w = x.p.right;
+                } else {
+                    branchCoverage[7]++;
                 }
                 if (w.right.color == R) {
+                    branchCoverage[8]++;
                     w.color = x.p.color;
                     x.p.color = B;
                     w.right.color = B;
                     rotateLeft(x.p);
                     x = root;
+                } else {
+                    branchCoverage[9]++;
                 }
             } else {
+                branchCoverage[10]++;
                 Node w = x.p.left;
                 if (w.color == R) {
+                    branchCoverage[11]++;
                     w.color = B;
                     x.p.color = R;
                     rotateRight(x.p);
                     w = x.p.left;
+                } else {
+                    branchCoverage[12]++;
                 }
                 if (w.right.color == B && w.left.color == B) {
+                    branchCoverage[13]++;
                     w.color = R;
                     x = x.p;
                     continue;
                 } else if (w.left.color == B) {
+                    branchCoverage[14]++;
                     w.right.color = B;
                     w.color = R;
                     rotateLeft(w);
                     w = x.p.left;
+                } else {
+                    branchCoverage[15]++;
                 }
                 if (w.left.color == R) {
+                    branchCoverage[16]++;
                     w.color = x.p.color;
                     x.p.color = B;
                     w.left.color = B;
                     rotateRight(x.p);
                     x = root;
+                } else {
+                    branchCoverage[17]++;
                 }
             }
         }
         x.color = B;
+        branchCoverage[18]++;
     }
 
     public void insertDemo() {
@@ -301,12 +327,10 @@ public class RedBlackBST {
             System.out.println("Add items");
 
             int item;
-            Node node;
 
             item = scan.nextInt();
             while (item != -999) {
-                node = new Node(item);
-                insert(node);
+                insert(item);
                 item = scan.nextInt();
             }
             printTree(root);
