@@ -69,14 +69,4 @@ class BinaryTreeTest {
         assertEquals(7, tree.find(6).data);
     }
 
-    @AfterAll
-    public static void calculateCoverage() {
-        double numBranchesTaken = 0;
-        for (boolean b : BinaryTree.coverage) {
-            if (b)  { numBranchesTaken++; }
-        }
-        double percentage = numBranchesTaken/BinaryTree.coverage.length;
-        System.out.format("Proportion of branches taken: %.2f%%\n", percentage*100);
-    }
-
 }

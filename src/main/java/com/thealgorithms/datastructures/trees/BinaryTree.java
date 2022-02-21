@@ -56,11 +56,6 @@ public class BinaryTree {
     }
 
     /**
-     * Array used for manually measuring branch coverage in remove().
-     */
-    public static boolean[] coverage = new boolean[26];
-
-    /**
      * The root of the Binary Tree
      */
     private Node root;
@@ -131,6 +126,90 @@ public class BinaryTree {
         }
     }
 
+    private boolean removeLeafNode(Node temp) {
+        if (temp == root) {
+                root = null;
+            } // This if/else assigns the new node to be either the left or right child of the parent
+            else if (temp.parent.data < temp.data) {
+                temp.parent.right = null;
+            } else {
+                temp.parent.left = null;
+            }
+            return true;
+    }
+
+    private boolean removeNodeWithOneChild(Node temp) {
+        // If it has a right child
+        if (temp.right != null) {
+            if (temp == root) {
+                root = temp.right;
+                return true;
+            }
+
+            temp.right.parent = temp.parent;
+
+            // Assigns temp to left or right child
+            if (temp.data < temp.parent.data) {
+                temp.parent.left = temp.right;
+            } else {
+                temp.parent.right = temp.right;
+            }
+            return true;
+        } // If it has a left child
+        else {
+            if (temp == root) {
+                root = temp.left;
+                return true;
+            }
+
+            temp.left.parent = temp.parent;
+
+            // Assigns temp to left or right side
+            if (temp.data < temp.parent.data) {
+                temp.parent.left = temp.left;
+            } else {
+                temp.parent.right = temp.left;
+            }
+            return true;
+        }
+    }
+
+    private boolean removeNodeWithTwoChildren(Node temp) {
+        Node successor = findSuccessor(temp);
+
+        // The left tree of temp is made the left tree of the successor
+        successor.left = temp.left;
+        successor.left.parent = successor;
+        // If the successor has a right child, the child's grandparent is it's new parent
+        if (successor.parent != temp) {
+            if (successor.right != null) {
+                successor.right.parent = successor.parent;
+                successor.parent.left = successor.right;
+                successor.right = temp.right;
+                successor.right.parent = successor;
+            } else {
+                successor.parent.left = null;
+                successor.right = temp.right;
+                successor.right.parent = successor;
+            }
+        }
+        if (temp == root) {
+            successor.parent = null;
+            root = successor;
+            return true;
+        } // If you're not deleting the root
+        else {
+            successor.parent = temp.parent;
+            // This if/else assigns the new node to be either the left or right child of the parent
+            if (temp.parent.data < temp.data) {
+                temp.parent.right = successor;
+            } else {
+                temp.parent.left = successor;
+            }
+            return true;
+        }
+    }
+
     /**
      * Deletes a given value from the Binary Tree
      *
@@ -143,116 +222,18 @@ public class BinaryTree {
 
         // If the value doesn't exist
         if (temp.data != value) {
-            coverage[0] = true;
             return false;
-        } else { coverage[1] = true; }
+        }
 
         // No children
         if (temp.right == null && temp.left == null) {
-            coverage[2] = true;
-
-            if (temp == root) {
-                coverage[3] = true;
-                root = null;
-            } // This if/else assigns the new node to be either the left or right child of the parent
-            else if (temp.parent.data < temp.data) {
-                coverage[4] = true;
-                temp.parent.right = null;
-            } else {
-                coverage[5] = true;
-                temp.parent.left = null;
-            }
-            return true;
+            return removeLeafNode(temp);
         } // Two children
         else if (temp.left != null && temp.right != null) {
-            coverage[6] = true;
-            Node successor = findSuccessor(temp);
-
-            // The left tree of temp is made the left tree of the successor
-            successor.left = temp.left;
-            successor.left.parent = successor;
-
-            // If the successor has a right child, the child's grandparent is it's new parent
-            if (successor.parent != temp) {
-                coverage[7] = true;
-                if (successor.right != null) {
-                    coverage[8] = true;
-                    successor.right.parent = successor.parent;
-                    successor.parent.left = successor.right;
-                    successor.right = temp.right;
-                    successor.right.parent = successor;
-                } else {
-                    coverage[9] = true;
-                    successor.parent.left = null;
-                    successor.right = temp.right;
-                    successor.right.parent = successor;
-                }
-            } else { coverage[10] = true; }
-
-            if (temp == root) {
-                coverage[11] = true;
-                successor.parent = null;
-                root = successor;
-                return true;
-            } // If you're not deleting the root
-            else {
-                coverage[12] = true;
-                successor.parent = temp.parent;
-
-                // This if/else assigns the new node to be either the left or right child of the parent
-                if (temp.parent.data < temp.data) {
-                    coverage[13] = true;
-                    temp.parent.right = successor;
-                } else {
-                    coverage[14] = true;
-                    temp.parent.left = successor;
-                }
-                return true;
-            }
+            return removeNodeWithTwoChildren(temp);
         } // One child
         else {
-            coverage[15] = true;
-            // If it has a right child
-            if (temp.right != null) {
-                coverage[16] = true;
-                if (temp == root) {
-                    coverage[17] = true;
-                    root = temp.right;
-                    return true;
-                } else { coverage[18] = true; }
-
-                temp.right.parent = temp.parent;
-
-                // Assigns temp to left or right child
-                if (temp.data < temp.parent.data) {
-                    coverage[19] = true;
-                    temp.parent.left = temp.right;
-                } else {
-                    coverage[20] = true;
-                    temp.parent.right = temp.right;
-                }
-                return true;
-            } // If it has a left child
-            else {
-                coverage[21] = true;
-                if (temp == root) {
-                    coverage[22] = true;
-                    root = temp.left;
-                    return true;
-                } else { coverage[23] = true; }
-
-                temp.left.parent = temp.parent;
-
-                // Assigns temp to left or right side
-                if (temp.data < temp.parent.data) {
-                    coverage[24] = true;
-                    temp.parent.left = temp.left;
-                } else {
-                    coverage[25] = true;
-                    temp.parent.right = temp.left;
-                }
-                return true;
-            }
+            return removeNodeWithOneChild(temp);
         }
     }
 
