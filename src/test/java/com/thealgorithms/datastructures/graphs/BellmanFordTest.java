@@ -16,7 +16,7 @@ public class BellmanFordTest {
     }
 
     @Test
-    void dunnyTest()    {
+    void dummyTest()    {
         assertTrue(true);
     }
 
