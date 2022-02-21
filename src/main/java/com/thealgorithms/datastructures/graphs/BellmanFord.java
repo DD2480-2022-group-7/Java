@@ -125,6 +125,7 @@ start vertex, end vertex and weights. Vertices should be labelled with a number 
             }
         }   else    {
             coverage[12] += 1;
+            return null;
         }
         sc.close();
         return dist;
