@@ -25,7 +25,7 @@ public class BellmanFordTest {
         String inputString = "1 0";
 
         InputStream inputStream = new ByteArrayInputStream(inputString.getBytes(StandardCharsets.UTF_8));
-        int[] result = BF.go(inputStream);
+        int[] result = BF.go(inputStream, false);
 
         assertEquals(result[0], 0);
     }
@@ -37,7 +37,7 @@ public class BellmanFordTest {
                 "0 1 3";
 
         InputStream inputStream = new ByteArrayInputStream(inputString.getBytes(StandardCharsets.UTF_8));
-        int[] result = BF.go(inputStream);
+        int[] result = BF.go(inputStream, false);
 
         assertEquals(result[0], 0);
         assertEquals(result[1], 3);
@@ -50,7 +50,7 @@ public class BellmanFordTest {
                 "1 0 3";
 
         InputStream inputStream = new ByteArrayInputStream(inputString.getBytes(StandardCharsets.UTF_8));
-        int[] result = BF.go(inputStream);
+        int[] result = BF.go(inputStream, false);
 
         assertEquals(result[0], 0);
         assertEquals(result[1], Integer.MAX_VALUE);
@@ -68,13 +68,23 @@ public class BellmanFordTest {
                 "0 3 9 " +
                 "1 3 1";
         InputStream inputStream = new ByteArrayInputStream(inputString.getBytes(StandardCharsets.UTF_8));
-        int[] result = BF.go(inputStream);
+        int[] result = BF.go(inputStream, false);
 
         assertEquals(result[0], 0);
         assertEquals(result[1], 3);
         assertEquals(result[2], 5);
         assertEquals(result[3], 4);
         assertEquals(result[4], Integer.MAX_VALUE);
+
+        // Make sure that printing doesn't change outcome
+        InputStream inputStreamWithPrint = new ByteArrayInputStream(inputString.getBytes(StandardCharsets.UTF_8));
+        int[] resultWithPrint = BF.go(inputStreamWithPrint, true);
+
+        assertEquals(resultWithPrint[0], 0);
+        assertEquals(resultWithPrint[1], 3);
+        assertEquals(resultWithPrint[2], 5);
+        assertEquals(resultWithPrint[3], 4);
+        assertEquals(resultWithPrint[4], Integer.MAX_VALUE);
     }
 
     @Test
@@ -89,21 +99,8 @@ public class BellmanFordTest {
                 "2 4 -2 " +
                 "4 1 0";
         InputStream inputStream = new ByteArrayInputStream(inputString.getBytes(StandardCharsets.UTF_8));
-        int[] result = BF.go(inputStream);
+        int[] result = BF.go(inputStream, false);
 
         assertNull(result);
-    }
-
-    @AfterAll
-    static void printCoverage()    {
-        float covered = 0;
-        for (int i : BF.coverage)  {
-            if (i != 0) {
-                covered += 1;
-            }
-        }
-        float coverage = covered / BF.coverage.length * 100;
-        System.out.println(Arrays.toString(BF.coverage));
-        System.out.println("Percentage of branches taken: " + coverage + "%");
     }
 }

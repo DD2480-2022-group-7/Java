@@ -6,9 +6,6 @@ import java.util.*;
 class BellmanFord /*Implementation of Bellman ford to detect negative cycles. Graph accepts inputs in form of edges which have
 start vertex, end vertex and weights. Vertices should be labelled with a number between 0 and total number of vertices-1,both inclusive*/ {
 
-    // For manual code coverage checks
-    public int[] coverage = new int[14];
-
     int vertex, edge;
     private Edge edges[];
     private int index = 0;
@@ -51,85 +48,122 @@ start vertex, end vertex and weights. Vertices should be labelled with a number 
 
     public static void main(String args[]) {
         BellmanFord obj = new BellmanFord(0, 0); // Dummy object to call nonstatic variables
-        obj.go(System.in);
+        obj.go(System.in, true);
     }
 
-    public int[]
-            go(InputStream input) // Interactive run for understanding the class first time. Assumes source vertex is 0 and
-    // shows distance to all vertices
+    public int[] go(InputStream input, boolean printStuff) // Interactive run for understanding the class first time. Assumes source vertex is 0 and
+                                       // shows distance to all vertices
     {
-        coverage[0] += 1;
-        Scanner sc = new Scanner(input); // Grab scanner object for user input
-        int i, v, e, u, ve, w, j, neg = 0;
-        System.out.println("Enter no. of vertices and edges please");
-        v = sc.nextInt();
-        e = sc.nextInt();
-        Edge arr[] = new Edge[e]; // Array of edges
-        System.out.println("Input edges");
-        for (i = 0; i < e; i++) {
-            coverage[1] += 1;
-            u = sc.nextInt();
-            ve = sc.nextInt();
-            w = sc.nextInt();
-            arr[i] = new Edge(u, ve, w);
+        Scanner sc = new Scanner(input); // Grab scanner object for user input or other input stream
+
+        // Reads from InputStream, could be user input.
+        int nbVertices = sc.nextInt();
+        int nbEdges = sc.nextInt();
+
+        Edge[] arr = new Edge[nbEdges]; // Array of edges
+        int srcVertex, endVertex, weight;
+
+        // Adds all given edges to the array of edges
+        for (int i = 0; i < nbEdges; i++) {
+
+            // Reads from InputStream, could be user input.
+            srcVertex = sc.nextInt();
+            endVertex = sc.nextInt();
+            weight = sc.nextInt();
+            
+            arr[i] = new Edge(srcVertex, endVertex, weight);
         }
-        int dist[]
-                = new int[v]; // Distance array for holding the finalized shortest path distance between source
+        sc.close();
+
+        // Distance array for holding the finalized shortest path distance between source
         // and all vertices
-        int p[] = new int[v]; // Parent array for holding the paths
-        for (i = 0; i < v; i++) {
-            coverage[2] += 1;
+        int[] dist = new int[nbVertices];
+        // Parent array for holding the paths
+        int[] paths = new int[nbVertices];
+        for (int i = 0; i < nbVertices; i++) {
             dist[i] = Integer.MAX_VALUE; // Initializing distance values
         }
+
+        // Get all distances
+        calcDistances(dist, arr, paths, nbVertices, nbEdges);
+
+        // Negative cycle checking
+        int negCycle = checkNegativeCycles(dist, arr, nbEdges);
+        if (negCycle == 1)  {
+            if (printStuff)    {   System.out.println("Graph contains negative cycles...");    }
+            return null;
+        }
+
+        // Prints result if printStuff is set to true
+        if (printStuff)    {   printResult(dist, paths, nbVertices);   }
+
+        // Returns the list of distances
+        return dist;
+    }
+
+    /**
+     * Calculates the shortest distance to all vertices in the given graph
+     *
+     * @param dist          array of calculated distances to all other vertices
+     * @param arr           array with all edges in graph
+     * @param paths             array for determining path
+     * @param nbVertices    number of vertices
+     * @param nbEdges       number of edges
+     */
+    private void calcDistances(int[] dist, Edge[] arr, int[] paths, int nbVertices, int nbEdges)    {
         dist[0] = 0;
-        p[0] = -1;
-        for (i = 0; i < v - 1; i++) {
-            coverage[3] += 1;
-            for (j = 0; j < e; j++) {
-                coverage[4] += 1;
+        paths[0] = -1;
+
+        for (int i = 0; i < nbVertices - 1; i++) {
+            for (int j = 0; j < nbEdges; j++) {
                 if ((int) dist[arr[j].u] != Integer.MAX_VALUE
                         && dist[arr[j].v] > dist[arr[j].u] + arr[j].w) {
-                    coverage[5] += 1;
                     dist[arr[j].v] = dist[arr[j].u] + arr[j].w; // Update
-                    p[arr[j].v] = arr[j].u;
-                }   else    {
-                    coverage[6] += 1;
+                    paths[arr[j].v] = arr[j].u;
                 }
             }
         }
-        // Final cycle for negative checking
-        for (j = 0; j < e; j++) {
-            coverage[7] += 1;
+    }
+
+    /**
+     * Determines if there exists a negative cycle in the given graph.
+     *
+     * @param dist      array of calculated distances to all other vertices
+     * @param arr       array with all edges in graph
+     * @param nbEdges   number of edges
+     *
+     * @return      Returns 1 if there is, 0 otherwise.
+     */
+    private int checkNegativeCycles(int[] dist, Edge[] arr, int nbEdges)   {
+
+        for (int j = 0; j < nbEdges; j++) {
             if ((int) dist[arr[j].u] != Integer.MAX_VALUE && dist[arr[j].v] > dist[arr[j].u] + arr[j].w) {
-                coverage[8] += 1;
-                neg = 1;
-                System.out.println("Negative cycle");
-                break;
-            }   else    {
-                coverage[9] += 1;
+                return 1;
             }
         }
-        if (neg == 0) // Go ahead and show results of computation
-        {
-            coverage[10] += 1;
-            System.out.println("Distances are: ");
-            for (i = 0; i < v; i++) {
-                coverage[11] += 1;
-                System.out.println(i + " " + dist[i]);
-            }
-            System.out.println("Path followed:");
-            for (i = 0; i < v; i++) {
-                coverage[12] += 1;
-                System.out.print("0 ");
-                printPath(p, i);
-                System.out.println();
-            }
-        }   else    {
-            coverage[13] += 1;
-            return null;
+        return 0;
+    }
+
+    /**
+     * Prints the result to standard out
+     *
+     * @param dist          array of calculated distances to all other vertices
+     * @param paths         parent array for holding the paths
+     * @param nbVertices    number of vertices
+     */
+    private void printResult(int[] dist, int[] paths, int nbVertices)    {
+
+        System.out.println("Distances are: ");
+        for (int i = 0; i < nbVertices; i++) {
+            System.out.println(i + " " + dist[i]);
         }
-        sc.close();
-        return dist;
+
+        System.out.println("Path followed:");
+        for (int i = 0; i < nbVertices; i++) {
+            System.out.print("0 ");
+            printPath(paths, i);
+            System.out.println();
+        }
     }
 
     /**
