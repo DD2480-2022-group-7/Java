@@ -8,8 +8,8 @@ package com.thealgorithms.sorts;
 import java.util.*;
 public class LinkList_Sort {
     public static boolean isSorted(int p[] , int option) {
-        try (Scanner sc = new Scanner(System.in)) {
-        }
+        //try (Scanner sc = new Scanner(System.in)) {
+        //}
         int a[] = p;
         // Array is taken as input from test class
         int b[] = p;
@@ -18,107 +18,167 @@ public class LinkList_Sort {
         // Choice is choosed as any number from 1 to 3 (So the linked list will be sorted by Merge sort technique/Insertion sort technique/Heap sort technique)
         switch (ch) {
             case 1:
+                /* branch 1 */
+                branchCount[1]++;
                 Task nm = new Task();
                 Node start = null, prev = null, fresh, ptr;
                 for (int i = 0; i < a.length; i++) {
+                    /* branch 2 */
+                    branchCount[2]++;
                     // New nodes are created and values are added
                     fresh = new Node(); // Node class is called
                     fresh.val = a[i]; // Node val is stored
-                    if (start == null)
+                    if (start == null) {
+                        /* branch 3 */
+                        branchCount[3]++;
                         start = fresh;
-                    else
+                    } else {
+                        /* branch 4 */
+                        branchCount[4]++;
                         prev.next = fresh;
+                    }
                     prev = fresh;
                 }
+                /* branch 5 */
+                branchCount[5]++;
                 start = nm.sort_by_mergesort(start);
                 // method is being called
                 int i=0;
                 for (ptr = start;ptr != null; ptr = ptr.next) {
+                    /* branch 6 */
+                    branchCount[6]++;
                     a[i++]=ptr.val;
                     // storing the sorted values in the array
                 }
+                /* branch 7 */
+                branchCount[7]++;
                 Arrays.sort(b);
                 // array b is sorted and it will return true when checked with sorted list
                 LinkList_Sort uu=new LinkList_Sort();
                 if(uu.compare(a,b))
                 {
+                    /* branch 8 */
+                    branchCount[8]++;
                     return true;
                 }
                 else
                 {
+                    /* branch 9 */
+                    branchCount[9]++;
                     return false;
                 }
                 // The given array and the expected array is checked if both are same then true is displayed else false is displayed
             case 2:
+                /* branch 10 */
+                branchCount[10]++;
                 Node start1 = null, prev1 = null, fresh1, ptr1;
                 for (int i1 = 0; i1 < a.length; i1++) {
+                    /* branch 11 */
+                    branchCount[11]++;
                     // New nodes are created and values are added
                     fresh1 = new Node(); // New node is created
                     fresh1.val = a[i1]; // Value is stored in the value part of the node
-                    if (start1 == null)
+                    if (start1 == null) {
+                        /* branch 12 */
+                        branchCount[12]++;
                         start1 = fresh1;
-                    else
+                    } else {
+                        /* branch 13 */
+                        branchCount[13]++;
                         prev1.next = fresh1;
+                    }
                     prev1 = fresh1;
                 }
+                /* branch 14 */
+                branchCount[14]++;
                 Task1 kk = new Task1();
                 start1 = kk.sort_by_insertionsort(start1);
                 // method is being called
                 int i1=0;
                 for (ptr1 = start1; ptr1 != null; ptr1 = ptr1.next) {
+                    /* branch 15 */
+                    branchCount[15]++;
                     a[i1++]=ptr1.val;
                     // storing the sorted values in the array
                 }
+                /* branch 16 */
+                branchCount[16]++;
                 LinkList_Sort uu1=new LinkList_Sort();
                 // array b is not sorted and it will return false when checked with sorted list
                 if(uu1.compare(a,b))
                 {
+                    /* branch 17 */
+                    branchCount[17]++;
                     return true;
                 }
                 else
                 {
+                    /* branch 18 */
+                    branchCount[18]++;
                     return false;
                 }
                 // The given array and the expected array is checked if both are same then true is displayed else false is displayed
             case 3:
+                /* branch 19 */
+                branchCount[19]++;
                 Task2 mm = new Task2();
                 Node start2 = null, prev2 = null, fresh2, ptr2;
                 for (int i2 = 0; i2 < a.length; i2++) {
+                    /* branch 20 */
+                    branchCount[20]++;
                     // New nodes are created and values are added
                     fresh2 = new Node(); // Node class is created
                     fresh2.val = a[i2]; // Value is stored in the value part of the Node
-                    if (start2 == null)
+                    if (start2 == null) {
+                        /* branch 21 */
+                        branchCount[21]++;
                         start2 = fresh2;
-                    else
+                    } else {
+                        /* branch 22 */
+                        branchCount[22]++;
                         prev2.next = fresh2;
+                    }
                     prev2 = fresh2;
                 }
+                /* branch 23 */
+                branchCount[23]++;
                 start2 = mm.sort_by_heapsort(start2);
                 // method is being called
                 int i3=0;
                 for (ptr2 = start2; ptr2 != null; ptr2 = ptr2.next) {
+                    /* branch 24 */
+                    branchCount[24]++;
                     a[i3++]=ptr2.val;
                     // storing the sorted values in the array
                 }
+                /* branch 25 */
+                branchCount[25]++;
                 Arrays.sort(b);
                 // array b is sorted and it will return true when checked with sorted list
                 LinkList_Sort uu2=new LinkList_Sort();
                 if(uu2.compare(a,b))
                 {
+                    /* branch 26 */
+                    branchCount[26]++;
                     return true;
                 }
                 else
                 {
+                    /* branch 27 */
+                    branchCount[27]++;
                     return false;
                 }
                 // The given array and the expected array is checked if both are same then true is displayed else false is displayed
             default:
+                /* branch 28 */
+                branchCount[28]++;
                 // default is used incase user puts a unauthorized value
                 System.out.println("Wrong choice");
         }
         // Switch case is used to call the classes as per the user requirement
         return false;
     }
+    static int[] branchCount = new int[29];
     boolean compare(int a[] , int b[])
     {
         for(int i=0;i<a.length;i++)
