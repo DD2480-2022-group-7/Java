@@ -8,11 +8,11 @@ package com.thealgorithms.sorts;
 import java.util.*;
 public class LinkList_Sort {
     public static boolean isSorted(int p[] , int option) {
-        try (Scanner sc = new Scanner(System.in)) {
-        }
-        int a[] = p;
+        //try (Scanner sc = new Scanner(System.in)) {
+        //}
+        int a[] = Arrays.copyOf(p, p.length);
         // Array is taken as input from test class
-        int b[] = p;
+        int b[] = Arrays.copyOf(p, p.length);
         // array similar to a
         int ch = option;
         // Choice is choosed as any number from 1 to 3 (So the linked list will be sorted by Merge sort technique/Insertion sort technique/Heap sort technique)
@@ -69,8 +69,9 @@ public class LinkList_Sort {
                     a[i1++]=ptr1.val;
                     // storing the sorted values in the array
                 }
+                Arrays.sort(b);
+                // array b is sorted and it will return true when checked with sorted list
                 LinkList_Sort uu1=new LinkList_Sort();
-                // array b is not sorted and it will return false when checked with sorted list
                 if(uu1.compare(a,b))
                 {
                     return true;
