@@ -7,13 +7,10 @@ class PageRank {
     public static void main(String args[]) {
         int nodes, i, j;
         Scanner in = new Scanner(System.in);
-        //commented below is a working example: (PG)
         System.out.print("Enter the Number of WebPages: ");
-        //5
         nodes = in.nextInt();
         PageRank p = new PageRank();
         System.out.println("Enter the Adjacency Matrix with 1->PATH & 0->NO PATH Between two WebPages: ");
-        //0 1 0 0 0 0 0 0 1 0 0 0 1 1 0 0 0 0 0 1 0 0 0 1 1
         for (i = 1; i <= nodes; i++) {
             for (j = 1; j <= nodes; j++) {
                 p.path[i][j] = in.nextInt();
@@ -22,6 +19,7 @@ class PageRank {
                 }
             }
         }
+        System.out.println(Arrays.deepToString(p.path));
         p.calc(nodes);
         for (int k = 1; k < PageRank.branchCoverage.length; k++) {
             if(PageRank.branchCoverage[k] == 0){
