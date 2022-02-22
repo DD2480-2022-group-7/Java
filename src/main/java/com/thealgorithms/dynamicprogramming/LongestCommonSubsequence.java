@@ -1,17 +1,24 @@
 package com.thealgorithms.dynamicprogramming;
 
 class LongestCommonSubsequence {
+    static int[] branchCoverage = new int[11];
 
     public static String getLCS(String str1, String str2) {
 
         // At least one string is null
         if (str1 == null || str2 == null) {
+            branchCoverage[1]++;
             return null;
+        } else {
+            branchCoverage[2]++;
         }
 
         // At least one string is empty
         if (str1.length() == 0 || str2.length() == 0) {
+            branchCoverage[3]++;
             return "";
+        } else {
+            branchCoverage[4]++;
         }
 
         String[] arr1 = str1.split("");
@@ -21,16 +28,22 @@ class LongestCommonSubsequence {
         int[][] lcsMatrix = new int[arr1.length + 1][arr2.length + 1];
 
         for (int i = 0; i < arr1.length + 1; i++) {
+            branchCoverage[5]++;
             lcsMatrix[i][0] = 0;
         }
         for (int j = 1; j < arr2.length + 1; j++) {
+            branchCoverage[6]++;
             lcsMatrix[0][j] = 0;
         }
         for (int i = 1; i < arr1.length + 1; i++) {
+            branchCoverage[7]++;
             for (int j = 1; j < arr2.length + 1; j++) {
+                branchCoverage[8]++;
                 if (arr1[i - 1].equals(arr2[j - 1])) {
+                    branchCoverage[9]++;
                     lcsMatrix[i][j] = lcsMatrix[i - 1][j - 1] + 1;
                 } else {
+                    branchCoverage[10]++;
                     lcsMatrix[i][j]
                             = lcsMatrix[i - 1][j] > lcsMatrix[i][j - 1] ? lcsMatrix[i - 1][j] : lcsMatrix[i][j - 1];
                 }
