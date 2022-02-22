@@ -58,7 +58,7 @@ public class BinaryTree {
     /**
      * Array used for manually measuring branch coverage in remove().
      */
-    public static boolean[] coverage = new boolean[26];
+    public static int[] branchCount = new int[26];
 
     /**
      * The root of the Binary Tree
@@ -143,29 +143,29 @@ public class BinaryTree {
 
         // If the value doesn't exist
         if (temp.data != value) {
-            coverage[0] = true;
+            branchCount[0]++;
             return false;
-        } else { coverage[1] = true; }
+        } else { branchCount[1]++; }
 
         // No children
         if (temp.right == null && temp.left == null) {
-            coverage[2] = true;
+            branchCount[2]++;
 
             if (temp == root) {
-                coverage[3] = true;
+                branchCount[3]++;
                 root = null;
             } // This if/else assigns the new node to be either the left or right child of the parent
             else if (temp.parent.data < temp.data) {
-                coverage[4] = true;
+                branchCount[4]++;
                 temp.parent.right = null;
             } else {
-                coverage[5] = true;
+                branchCount[5]++;
                 temp.parent.left = null;
             }
             return true;
         } // Two children
         else if (temp.left != null && temp.right != null) {
-            coverage[6] = true;
+            branchCount[6]++;
             Node successor = findSuccessor(temp);
 
             // The left tree of temp is made the left tree of the successor
@@ -174,81 +174,81 @@ public class BinaryTree {
 
             // If the successor has a right child, the child's grandparent is it's new parent
             if (successor.parent != temp) {
-                coverage[7] = true;
+                branchCount[7]++;
                 if (successor.right != null) {
-                    coverage[8] = true;
+                    branchCount[8]++;
                     successor.right.parent = successor.parent;
                     successor.parent.left = successor.right;
                     successor.right = temp.right;
                     successor.right.parent = successor;
                 } else {
-                    coverage[9] = true;
+                    branchCount[9]++;
                     successor.parent.left = null;
                     successor.right = temp.right;
                     successor.right.parent = successor;
                 }
-            } else { coverage[10] = true; }
+            } else { branchCount[10]++; }
 
             if (temp == root) {
-                coverage[11] = true;
+                branchCount[11]++;
                 successor.parent = null;
                 root = successor;
                 return true;
             } // If you're not deleting the root
             else {
-                coverage[12] = true;
+                branchCount[12]++;
                 successor.parent = temp.parent;
 
                 // This if/else assigns the new node to be either the left or right child of the parent
                 if (temp.parent.data < temp.data) {
-                    coverage[13] = true;
+                    branchCount[13]++;
                     temp.parent.right = successor;
                 } else {
-                    coverage[14] = true;
+                    branchCount[14]++;
                     temp.parent.left = successor;
                 }
                 return true;
             }
         } // One child
         else {
-            coverage[15] = true;
+            branchCount[15]++;
             // If it has a right child
             if (temp.right != null) {
-                coverage[16] = true;
+                branchCount[16]++;
                 if (temp == root) {
-                    coverage[17] = true;
+                    branchCount[17]++;
                     root = temp.right;
                     return true;
-                } else { coverage[18] = true; }
+                } else { branchCount[18]++; }
 
                 temp.right.parent = temp.parent;
 
                 // Assigns temp to left or right child
                 if (temp.data < temp.parent.data) {
-                    coverage[19] = true;
+                    branchCount[19]++;
                     temp.parent.left = temp.right;
                 } else {
-                    coverage[20] = true;
+                    branchCount[20]++;
                     temp.parent.right = temp.right;
                 }
                 return true;
             } // If it has a left child
             else {
-                coverage[21] = true;
+                branchCount[21]++;
                 if (temp == root) {
-                    coverage[22] = true;
+                    branchCount[22]++;
                     root = temp.left;
                     return true;
-                } else { coverage[23] = true; }
+                } else { branchCount[23]++; }
 
                 temp.left.parent = temp.parent;
 
                 // Assigns temp to left or right side
                 if (temp.data < temp.parent.data) {
-                    coverage[24] = true;
+                    branchCount[24]++;
                     temp.parent.left = temp.left;
                 } else {
-                    coverage[25] = true;
+                    branchCount[25]++;
                     temp.parent.right = temp.left;
                 }
                 return true;
