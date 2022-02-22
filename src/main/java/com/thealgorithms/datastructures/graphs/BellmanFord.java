@@ -51,6 +51,19 @@ start vertex, end vertex and weights. Vertices should be labelled with a number 
         obj.go(System.in, true);
     }
 
+    /**
+     * Calculates shortest distance to each other vertex and what path to take. If input is
+     * user input (System.in) then the first two integers are number of vertices and number
+     * of edges, and the following integers sets the edges with source vertex, end vertex,
+     * weight (three at a time in that order).
+     *
+     * Example input with 3 vertices and 2 edges:
+     * "3 2 0 1 4 1 2 7"
+     *
+     * @param input         An InputStream, can be user input if set to System.in
+     * @param printStuff    Prints the result at end if set to true, otherwise only returns the distances
+     * @return              Returns the distances to each other vertex
+     */
     public int[] go(InputStream input, boolean printStuff) // Interactive run for understanding the class first time. Assumes source vertex is 0 and
                                        // shows distance to all vertices
     {
@@ -70,7 +83,7 @@ start vertex, end vertex and weights. Vertices should be labelled with a number 
             srcVertex = sc.nextInt();
             endVertex = sc.nextInt();
             weight = sc.nextInt();
-            
+
             arr[i] = new Edge(srcVertex, endVertex, weight);
         }
         sc.close();
