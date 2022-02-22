@@ -43,20 +43,20 @@ public class RedBlackBST {
         printTree(node.right);
     }
 
-    private Node findNode(Node findNode, Node node) {
+    public Node findNode(int key, Node findNode) {
         if (root == nil) {
             return null;
         }
-        if (findNode.key < node.key) {
-            if (node.left != nil) {
-                return findNode(findNode, node.left);
+        if (key < findNode.key) {
+            if (findNode.left != nil) {
+                return findNode( key, findNode.left);
             }
-        } else if (findNode.key > node.key) {
-            if (node.right != nil) {
-                return findNode(findNode, node.right);
+        } else if (key > findNode.key) {
+            if (findNode.right != nil) {
+                return findNode(key, findNode.right);
             }
-        } else if (findNode.key == node.key) {
-            return node;
+        } else if (findNode.key == key) {
+            return findNode;
         }
         return null;
     }
@@ -205,7 +205,7 @@ public class RedBlackBST {
 
     boolean delete(int key) {
         Node z = new Node(key);
-        if ((z = findNode(z, root)) == null) {
+        if ((z = findNode(key, root)) == null) {
             return false;
         }
         Node x;

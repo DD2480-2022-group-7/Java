@@ -10,7 +10,6 @@ public class RedBlackBSTTest {
 
     public RedBlackBST tree;
 
-
     @BeforeEach
     public void initRBTree() {
         tree = new RedBlackBST();
@@ -21,7 +20,6 @@ public class RedBlackBSTTest {
         for (int num: numbers){
             tree.insert(num);
         }
-        //tree.printTree(tree.root);
     }
 
     @Test
@@ -31,15 +29,16 @@ public class RedBlackBSTTest {
 
     @Test
     public  void TestingCoverage(){
-
-        System.out.println("Before:");
-        tree.printTree(tree.root);
+        /*System.out.println("Before:");
+        tree.printTree(tree.root);*/
         for(int i = 0; i < 100 ; i++) {
            tree.delete((i*7)%99);
         }
-
-        System.out.println("After:");
-        tree.printTree(tree.root);
+        for (int i = 0; i < 100; i++) {
+            assertNull(tree.findNode((i*7)%99, tree.root));
+        }
+        /*System.out.println("After:");
+        tree.printTree(tree.root);*/
     }
     @AfterAll
     public static void calculateCoverage() {
@@ -54,5 +53,4 @@ public class RedBlackBSTTest {
         System.out.println("Branches Taken = " + BranchesTaken);
         System.out.format("Proportion of branches taken: %.2f%%\n", percentage*100);
     }
-
 }
