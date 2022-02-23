@@ -37,6 +37,17 @@ public class LongestCommonSubsequenceTest {
     }
 
     @Test
+    public void TestingTwoCommonSubstrings() {
+        String text1 = "ABCD";
+        String text2 = "ACBAD";
+
+        assertEquals(getLCS(text1,text2), "ACD");
+        //There are two common substrings that exist for this
+        //ACD and ABD
+
+    }
+
+    @Test
     public void TestingValidStrings() {
         String text1 = "ABCDEFGHIJKJKJKPG";
         String text2 = "AABCDIAJKSZNMV";
