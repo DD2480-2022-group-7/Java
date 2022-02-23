@@ -1,5 +1,8 @@
 package com.thealgorithms.divideandconquer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * For a set of points in a coordinates system (10000 maximum), ClosestPair
  * class calculates the two closest points.
@@ -166,68 +169,55 @@ public final class ClosestPair {
      * closestPair function: find closest pair.
      *
      * @param a (IN Parameter) array stored before divide <br>
-     * @param indexNum (IN Parameter) number coordinates divideArray <br>
+     * @param indexNum (IN Parameter) number coordinates a <br>
      * @return minimum distance <br>
      */
     public double closestPair(final Location[] a, final int indexNum) {
-
-        Location[] divideArray = new Location[indexNum];
-        System.arraycopy(a, 0, divideArray, 0, indexNum); // Copy previous array
-        int divideX = indexNum / 2; // Intermediate value for divide
-        Location[] leftArray = new Location[divideX]; // divide - left array
-        // divide-right array
-        Location[] rightArray = new Location[indexNum - divideX];
         if (indexNum <= 3) { // If the number of coordinates is 3 or less
-            return bruteForce(divideArray);
+            return bruteForce(a);
         }
-        // divide-left array
-        System.arraycopy(divideArray, 0, leftArray, 0, divideX);
-        // divide-right array
-        System.arraycopy(divideArray, divideX, rightArray, 0, indexNum - divideX);
+        int divideXIndex = indexNum / 2; // Intermediate value for divide
+        Location[] aLeft = Arrays.copyOfRange(a, 0, divideXIndex);
+        Location[] aRight = Arrays.copyOfRange(a, 0, indexNum - divideXIndex);
 
-        double minLeftArea; // Minimum length of left array
-        double minRightArea; // Minimum length of right array
-        double minValue; // Minimum lengt
+        // called area since the left array contains all locations left of the X midpoint
+        double minLeftArea = closestPair(aLeft, divideXIndex);
+        double minRightArea = closestPair(aRight, indexNum - divideXIndex);
 
-        minLeftArea = closestPair(leftArray, divideX); // recursive closestPair
-        minRightArea = closestPair(rightArray, indexNum - divideX);
         // window size (= minimum length)
-        minValue = Math.min(minLeftArea, minRightArea);
+        double minValue = Math.min(minLeftArea, minRightArea); // Minimum length
 
         // Create window.  Set the size for creating a window
         // and creating a new array for the coordinates in the window
-        for (int i = 0; i < indexNum; i++) {
-            double xGap = Math.abs(divideArray[divideX].x - divideArray[i].x);
+        ArrayList<Location> insideWindow = new ArrayList<>();
+        for (Location loc : a) {
+            double xGap = Math.abs(a[divideXIndex].x - loc.x);
             if (xGap < minValue) {
-                ClosestPair.setSecondCount(secondCount + 1); // size of the array
+                insideWindow.add(loc);
             } else {
-                if (divideArray[i].x > divideArray[divideX].x) {
+                if (loc.x > a[divideXIndex].x) {
                     break;
                 }
             }
         }
+        ClosestPair.setSecondCount(secondCount + insideWindow.size());
         // new array for coordinates in window
         Location[] firstWindow = new Location[secondCount];
-        int k = 0;
-        for (int i = 0; i < indexNum; i++) {
-            double xGap = Math.abs(divideArray[divideX].x - divideArray[i].x);
-            if (xGap < minValue) { // if it's inside a window
-                firstWindow[k] = divideArray[i]; // put in an array
-                k++;
-            } else {
-                if (divideArray[i].x > divideArray[divideX].x) {
-                    break;
-                }
-            }
-        }
+        firstWindow = insideWindow.toArray(firstWindow);
         yQuickSort(firstWindow, 0, secondCount - 1); // Sort by y coordinates
         /* Coordinates in Window */
+        minValue = checkPointsInWindow(firstWindow, minValue);
+        ClosestPair.setSecondCount(0);
+        return minValue;
+    }
+
+    private double checkPointsInWindow(Location[] window, double minValue) {
         double length;
         // size comparison within window
         for (int i = 0; i < secondCount - 1; i++) {
             for (int j = (i + 1); j < secondCount; j++) {
-                double xGap = Math.abs(firstWindow[i].x - firstWindow[j].x);
-                double yGap = Math.abs(firstWindow[i].y - firstWindow[j].y);
+                double xGap = Math.abs(window[i].x - window[j].x);
+                double yGap = Math.abs(window[i].y - window[j].y);
                 if (yGap < minValue) {
                     length = Math.sqrt(Math.pow(xGap, 2) + Math.pow(yGap, 2));
                     // If measured distance is less than current min distance
@@ -237,8 +227,8 @@ public final class ClosestPair {
                         // Conditional for registering final coordinate
                         if (length < minNum) {
                             ClosestPair.setMinNum(length);
-                            point1 = firstWindow[i];
-                            point2 = firstWindow[j];
+                            point1 = window[i];
+                            point2 = window[j];
                         }
                     }
                 } else {
@@ -246,7 +236,6 @@ public final class ClosestPair {
                 }
             }
         }
-        ClosestPair.setSecondCount(0);
         return minValue;
     }
 
