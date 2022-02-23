@@ -133,16 +133,20 @@ public class CRCAlgorithm {
     public void divideMessageWithP(boolean check) {
         ArrayList<Integer> x = new ArrayList<>();
         ArrayList<Integer> k = (ArrayList<Integer>) message.clone();
+        // if sender, pad with n zeros for a n-bit CRC
         if (!check) {
             for (int i = 0; i < p.size() - 1; i++) {
                 k.add(0);
             }
         }
         while (!k.isEmpty()) {
+            // pop from the beggining of the message until you have the size of the divider
+            // or run out of bits
             while (x.size() < p.size() && !k.isEmpty()) {
                 x.add(k.get(0));
                 k.remove(0);
             }
+            // if you have a full segment, do XOR with the bits in the polynomial
             if (x.size() == p.size()) {
                 for (int i = 0; i < p.size(); i++) {
                     if (x.get(i) == p.get(i)) {
@@ -151,17 +155,23 @@ public class CRCAlgorithm {
                         x.set(i, 1);
                     }
                 }
+                // skip over places in the message that are 0,
+                // so it may move more than 1 bit each iteration
                 for (int i = 0; i < x.size() && x.get(i) != 1; i++) {
                     x.remove(0);
                 }
             }
         }
+        // remainder after division
         dividedMessage = (ArrayList<Integer>) x.clone();
+        // if sender, append the divider to the message
         if (!check) {
             for (int z : dividedMessage) {
                 message.add(z);
             }
         } else {
+            // if receiver, check that the remainder did turn out as 0, like
+            // they should if there where no errors in the message.
             if (dividedMessage.contains(1) && messageChanged) {
                 wrongMessCaught++;
             } else if (!dividedMessage.contains(1) && messageChanged) {
